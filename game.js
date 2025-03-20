@@ -2,8 +2,18 @@ class FlappyBird {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = 320;
-        this.canvas.height = 480;
+        
+        // Check if device is touch-enabled
+        this.isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        // Adjust canvas size for mobile
+        if (this.isTouchDevice) {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+        } else {
+            this.canvas.width = 320;
+            this.canvas.height = 480;
+        }
         
         this.images = {
             bird: new Image(),
@@ -23,31 +33,31 @@ class FlappyBird {
         this.score = 0;
         this.bestScore = localStorage.getItem('bestScore') || 0;
         
-        // Bird and pipe properties
+        // Bird properties with touch device adjustments
         this.bird = {
-            x: 50,
+            x: this.isTouchDevice ? this.canvas.width * 0.2 : 50,
             y: this.canvas.height / 3,
             width: 34,
             height: 24,
             velocity: 0,
-            gravity: 0.8,
-            jump: -9.5,
+            gravity: this.isTouchDevice ? 0.4 : 0.8,    // Reduced gravity for touch devices
+            jump: this.isTouchDevice ? -7 : -9.5,       // Adjusted jump power for touch devices
             rotation: 0,
             rotationSpeed: 0.08
         };
         
- 
+        // Pipe properties with touch device adjustments
         this.pipes = [];
         this.pipeWidth = 52;
         this.initialPipeGap = 150;
         this.pipeGap = this.initialPipeGap;
-        this.pipeSpacing = 250;
-        this.initialPipeSpeed = 3;
+        this.pipeSpacing = this.isTouchDevice ? 300 : 250; // More space between pipes on mobile
+        this.initialPipeSpeed = this.isTouchDevice ? 2 : 3; // Slower initial speed on mobile
         this.pipeSpeed = this.initialPipeSpeed;
         
         // Difficulty settings
         this.difficultyInterval = 15;
-        this.speedIncrease = 0.2;
+        this.speedIncrease = this.isTouchDevice ? 0.15 : 0.2; // Slower speed increase on mobile
         this.gapDecrease = 10;
         this.maxDifficultyLevel = 5;
         
@@ -157,7 +167,7 @@ class FlappyBird {
         // Update pipes
         for (let i = this.pipes.length - 1; i >= 0; i--) {
             const pipe = this.pipes[i];
-            pipe.x -= this.pipeSpeed * 2;
+            pipe.x -= this.pipeSpeed * (this.isTouchDevice ? 1.5 : 2); // Slower pipe movement on touch devices
             
             // Check collision
             if (this.checkCollision(pipe)) {

@@ -31,10 +31,25 @@ body {
     position: relative;
     width: 320px;
     height: 480px;
-    background-color: #4EC0CA;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    body {
+        background: none;
+        padding: 0;
+        animation: none;
+    }
+    
+    .game-container {
+        width: 100vw;
+        height: 100vh;
+        box-shadow: none;
+        border-radius: 0;
+    }
 }
 
 #gameCanvas {

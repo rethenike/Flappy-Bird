@@ -23,6 +23,8 @@ A faithful recreation of the original Flappy Bird game, playable on both desktop
 - Score tracking with local storage for best score
 - Touch-friendly controls
 - Classic Flappy Bird gameplay mechanics
+- Progressive difficulty: pipes get closer and game speeds up every 15 points until score 60
+- After score 60: speed increases every 10 points for extra challenge
 
 ## Technical Details
 
@@ -31,5 +33,3 @@ The game is built using:
 - Vanilla JavaScript for game logic
 - CSS3 for styling and animations
 - Local Storage for saving high scores
-
-No external dependencies required - just open and play! 
