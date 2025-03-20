@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2ECC71, #F1C40F, #2ECC71);
+    background-size: 200% 200%;
+    animation: gradientAnimation 10s ease infinite;
+    font-family: Arial, sans-serif;
+}
+
+.game-container {
+    position: relative;
+    width: 320px;
+    height: 480px;
+    background-color: #4EC0CA;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.screen h1, .screen h2 {
+    color: white;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.screen p {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.score-container {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.score-container p {
+    margin: 10px 0;
+    font-size: 1.3em;
+}
+
+.score-container span {
+    color: #f1c40f;
+    font-weight: bold;
+}
+
+.best-score {
+    color: white;
+    font-size: 1.2em !important;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.best-score span {
+    color: #f1c40f;
+    font-weight: bold;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: #f1c40f;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #f39c12;
+}
+
+.hidden {
+    display: none;
+} 
