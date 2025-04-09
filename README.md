@@ -4,11 +4,10 @@ A faithful recreation of the original Flappy Bird game, playable on both desktop
 
 ## How to Play
 
-1. Open `index.html` in a web browser
-2. Click the "Start Game" button or press Space to begin
-3. Click, tap, or press Space to make the bird jump
-4. Avoid the pipes and try to get the highest score possible
-5. When you lose, click "Play Again" to start a new game
+1. Click the "Start Game" button or press Space to begin
+2. Click, tap, or press Space to make the bird jump
+3. Avoid the pipes and try to get the highest score possible
+4. When you lose, click "Play Again" to start a new game
 
 ## Controls
 
@@ -23,11 +22,11 @@ https://rethenike.github.io/Flappy-Bird/
 
 - Responsive design that works on both desktop and mobile devices
 - Smooth animations and physics
-- Score tracking with local storage for best score
+- Score tracking with local storage for your best score
 - Touch-friendly controls
 - Classic Flappy Bird gameplay mechanics
-- Progressive difficulty: pipes get closer and game speeds up every 15 points until score 60
-- After score 60: speed increases every 10 points for extra challenge
+- Progressive difficulty: pipes get closer and game speeds up every 10 points
+- After score 60: speed increases every 10 points for an extra challenge
 
 ## Technical Details
 
