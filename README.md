@@ -16,6 +16,9 @@ A faithful recreation of the original Flappy Bird game, playable on both desktop
 - Touch Screen: Tap to make the bird jump
 - Keyboard: Press Space to make the bird jump
 
+## Live Demo 
+https://rethenike.github.io/Flappy-Bird/
+
 ## Features
 
 - Responsive design that works on both desktop and mobile devices
