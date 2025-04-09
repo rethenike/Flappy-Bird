@@ -11,8 +11,8 @@ class FlappyBird {
             this.canvas.width = window.innerWidth;
             this.canvas.height = window.innerHeight;
         } else {
-            this.canvas.width = 320;
-            this.canvas.height = 480;
+            this.canvas.width = 320;    
+            this.canvas.height = 480;   
         }
         
         this.images = {
@@ -33,38 +33,42 @@ class FlappyBird {
         this.score = 0;
         this.bestScore = localStorage.getItem('bestScore') || 0;
         
-        // Bird properties with touch device adjustments
+        // Bird properties
         this.bird = {
             x: this.isTouchDevice ? this.canvas.width * 0.2 : 50,
             y: this.canvas.height / 3,
             width: 34,
             height: 24,
             velocity: 0,
-            gravity: this.isTouchDevice ? 0.4 : 0.8,    // Reduced gravity for touch devices
-            jump: this.isTouchDevice ? -7 : -9.5,       // Adjusted jump power for touch devices
+            gravity: this.isTouchDevice ? 0.1 : 0.08,    
+            jump: this.isTouchDevice ? -3 : -2.5,     
             rotation: 0,
             rotationSpeed: 0.08
         };
         
-        // Pipe properties with touch device adjustments
+        // Pipe properties
         this.pipes = [];
-        this.pipeWidth = 52;
+        this.pipeWidth = 42;    
         this.initialPipeGap = 150;
         this.pipeGap = this.initialPipeGap;
-        this.pipeSpacing = this.isTouchDevice ? 300 : 250; // More space between pipes on mobile
-        this.initialPipeSpeed = this.isTouchDevice ? 2 : 3; // Slower initial speed on mobile
+        this.minPipeSpacing = 120;  
+        this.maxPipeSpacing = 180;  
+        this.initialPipeSpeed = this.isTouchDevice ? 0.4 : 0.25;
         this.pipeSpeed = this.initialPipeSpeed;
         
         // Difficulty settings
         this.difficultyInterval = 15;
-        this.speedIncrease = this.isTouchDevice ? 0.15 : 0.2; // Slower speed increase on mobile
+        this.speedIncrease = this.isTouchDevice ? 0.03 : 0.02;     
         this.gapDecrease = 10;
         this.maxDifficultyLevel = 5;
+        
+        // Calculate speed multiplier based on screen size
+        this.speedMultiplier = Math.min(this.canvas.width / 320, this.isTouchDevice ? 0.6 : 0.4); 
         
         // Ground properties
         this.ground = {
             y: this.canvas.height - 112,
-            height: 112
+            height: 112   
         };
         
         this.setupEventListeners();
@@ -126,7 +130,7 @@ class FlappyBird {
         this.bird.rotation = 0;
         this.pipeGap = this.initialPipeGap;
         this.pipeSpeed = this.initialPipeSpeed;
-        // Update best score
+        // best score
         document.getElementById('startBestScore').textContent = this.bestScore;
         this.addPipe();
     }
@@ -142,17 +146,21 @@ class FlappyBird {
     }
     
     addPipe() {
-        // Define minimum and maximum positions for the gap
-        const minGapPosition = 120; // Minimum distance from top
-        const maxGapPosition = this.canvas.height - this.pipeGap - 120; // Maximum distance from top, accounting for ground and minimum bottom space
+        //  minimum and maximum positions for the gap
+        const minGapPosition = 120; 
+        const maxGapPosition = this.canvas.height - this.pipeGap - 120;  
         
-        // Calculate gap position within the range
+        // Calculate gap position 
         const gapPosition = Math.random() * (maxGapPosition - minGapPosition) + minGapPosition;
+        
+        // Calculate spacing between pipes
+        const randomSpacing = Math.random() * (this.maxPipeSpacing - this.minPipeSpacing) + this.minPipeSpacing;
         
         this.pipes.push({
             x: this.canvas.width,
-            gapY: gapPosition,
-            passed: false
+            gapY: gapPosition,    // store random spacing for pipes
+            passed: false,
+            spacing: randomSpacing  
         });
     }
     
@@ -167,7 +175,7 @@ class FlappyBird {
         // Update pipes
         for (let i = this.pipes.length - 1; i >= 0; i--) {
             const pipe = this.pipes[i];
-            pipe.x -= this.pipeSpeed * (this.isTouchDevice ? 1.5 : 2); // Slower pipe movement on touch devices
+            pipe.x -= (this.pipeSpeed * 2) / this.speedMultiplier;
             
             // Check collision
             if (this.checkCollision(pipe)) {
@@ -177,20 +185,18 @@ class FlappyBird {
                 document.getElementById('gameOverScreen').classList.remove('hidden');
             }
             
-            // Check if pipe has passed
+            // check if pipe has passed
             if (!pipe.passed && pipe.x < this.bird.x) {
                 pipe.passed = true;
                 this.score++;
                 
-                // Increase difficulty based on score
+                // Increase Difficulty based on score
                 if (this.score <= 60) {
-                    // Before 60 increase every 15 points
                     if (this.score % this.difficultyInterval === 0 && 
                         this.score / this.difficultyInterval <= this.maxDifficultyLevel) {
                         this.increaseDifficulty();
                     }
                 } else {
-                    // After score of 60, increase speed every 10 points
                     if (this.score % 10 === 0) {
                         this.pipeSpeed += this.speedIncrease;
                     }
@@ -202,15 +208,15 @@ class FlappyBird {
                 }
             }
             
-            // Remove off screen pipes
+            // Rremove off screen pipes
             if (pipe.x + this.pipeWidth < 0) {
                 this.pipes.splice(i, 1);
             }
         }
         
-        // Adds new pipes
+        // Add new pipes with random spacing
         if (this.pipes.length === 0 || 
-            this.pipes[this.pipes.length - 1].x < this.canvas.width - this.pipeSpacing) {
+            this.pipes[this.pipes.length - 1].x < this.canvas.width - this.pipes[this.pipes.length - 1].spacing) {
             this.addPipe();
         }
         
@@ -240,33 +246,34 @@ class FlappyBird {
             // Upper pipe (flipped)
             this.ctx.save();
             this.ctx.translate(pipe.x + this.pipeWidth, pipe.gapY);
-            this.ctx.scale(-1, -1); // Flip both horizontally and vertically
+            this.ctx.scale(-1, -1); 
+
             // pipes body
             this.ctx.drawImage(
                 this.images.pipe,
-                0, 0, this.pipeWidth, 320, // Source rectangle for pipe body
-                0, 0, this.pipeWidth, pipe.gapY // Destination rectangle
+                0, 0, this.pipeWidth, 320, 
+                0, 0, this.pipeWidth, pipe.gapY 
             );
             // pipes cap
             this.ctx.drawImage(
                 this.images.pipe,
-                0, 346, this.pipeWidth, 26, // Source rectangle for pipe cap
-                0, pipe.gapY - 26, this.pipeWidth, 26 // Destination rectangle
+                0, 346, this.pipeWidth, 26, 
+                0, pipe.gapY - 26, this.pipeWidth, 26 
             );
             this.ctx.restore();
             
-            // Lower pipe
+            
             // pipes body
             this.ctx.drawImage(
                 this.images.pipe,
-                0, 0, this.pipeWidth, 320, // Source rectangle for pipe body
-                pipe.x, pipe.gapY + this.pipeGap, this.pipeWidth, this.canvas.height - (pipe.gapY + this.pipeGap) // Destination rectangle
+                0, 0, this.pipeWidth, 320, 
+                pipe.x, pipe.gapY + this.pipeGap, this.pipeWidth, this.canvas.height - (pipe.gapY + this.pipeGap) 
             );
             // pipe cap drawing
             this.ctx.drawImage(
                 this.images.pipe,
-                0, 346, this.pipeWidth, 26, // Source rectangle for pipe cap (bottom cap)
-                pipe.x, pipe.gapY + this.pipeGap, this.pipeWidth, 26 // Destination rectangle
+                0, 346, this.pipeWidth, 26, 
+                pipe.x, pipe.gapY + this.pipeGap, this.pipeWidth, 26 
             );
         }
         
@@ -286,7 +293,7 @@ class FlappyBird {
         );
         this.ctx.restore();
         
-        // Draw score
+        // draw score
         if (this.gameStarted && !this.gameOver) {
             this.ctx.fillStyle = 'white';
             this.ctx.font = 'bold 24px Arial';
@@ -305,14 +312,14 @@ class FlappyBird {
         // Always increase speed
         this.pipeSpeed += this.speedIncrease;
         
-        // Only decrease gap size if score is less than or equal to 60
+        // decrease gap size if score is less than or equal to 60
         if (this.score <= 60) {
             this.pipeGap = Math.max(90, this.pipeGap - this.gapDecrease);
         }
     }
 }
 
-// Start the game when the page loads
+// start the game when the page loads
 window.addEventListener('load', () => {
     new FlappyBird();
 }); 
